@@ -138,7 +138,7 @@ export function BattleCalculatorForm() {
       toast.success('Enemy scout data extracted successfully!');
     } catch (error) {
       console.error('OCR error:', error);
-      toast.error(error instanceof Error ? error.message : 'Could not extract scout data. Please paste scout data manually.');
+      toast.error(error instanceof Error ? error.message : 'Could not extract scout data. Please ensure the image shows a clear Kingshot scout report with visible troop icons.');
     } finally {
       setIsOcrProcessingEnemy(false);
       event.target.value = ''; // Allow re-upload of same file
@@ -191,7 +191,7 @@ export function BattleCalculatorForm() {
       toast.success('Your scout data extracted successfully!');
     } catch (error) {
       console.error('OCR error:', error);
-      toast.error(error instanceof Error ? error.message : 'Could not extract scout data. Please paste scout data manually.');
+      toast.error(error instanceof Error ? error.message : 'Could not extract scout data. Please ensure the image shows a clear Kingshot scout report with visible troop icons.');
     } finally {
       setIsOcrProcessingMy(false);
       event.target.value = ''; // Allow re-upload of same file
@@ -402,7 +402,7 @@ export function BattleCalculatorForm() {
                     ) : (
                       <>
                         <Upload className="w-4 h-4" />
-                        Or upload enemy scout image (coming soon)
+                        Or upload enemy scout image
                       </>
                     )}
                   </div>
@@ -487,7 +487,7 @@ export function BattleCalculatorForm() {
                 ) : (
                   <>
                     <Upload className="w-4 h-4" />
-                    Or upload your scout image (coming soon)
+                    Or upload scout image
                   </>
                 )}
               </div>
@@ -522,21 +522,21 @@ export function BattleCalculatorForm() {
                   <SelectContent>
                     {Array.from({ length: 11 }, (_, i) => i + 1).map((t) => (
                       <SelectItem key={t} value={t.toString()}>
-                        T{t}
+                        Tier {t}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </FormField>
-              <FormField label="My TG" helpText={HELP_TEXT.tierSelection} error={errors.myTG}>
+              <FormField label="My TG Level" helpText={HELP_TEXT.tierSelection} error={errors.myTG}>
                 <Select value={myTG} onValueChange={setMyTG}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {Array.from({ length: 6 }, (_, i) => i).map((tg) => (
+                    {Array.from({ length: 5 }, (_, i) => i + 1).map((tg) => (
                       <SelectItem key={tg} value={tg.toString()}>
-                        TG{tg}
+                        TG {tg}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -553,21 +553,21 @@ export function BattleCalculatorForm() {
                   <SelectContent>
                     {Array.from({ length: 11 }, (_, i) => i + 1).map((t) => (
                       <SelectItem key={t} value={t.toString()}>
-                        T{t}
+                        Tier {t}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </FormField>
-              <FormField label="Enemy TG" helpText={HELP_TEXT.tierSelection} error={errors.enemyTG}>
+              <FormField label="Enemy TG Level" helpText={HELP_TEXT.tierSelection} error={errors.enemyTG}>
                 <Select value={enemyTG} onValueChange={setEnemyTG}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {Array.from({ length: 6 }, (_, i) => i).map((tg) => (
+                    {Array.from({ length: 5 }, (_, i) => i + 1).map((tg) => (
                       <SelectItem key={tg} value={tg.toString()}>
-                        TG{tg}
+                        TG {tg}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -575,25 +575,6 @@ export function BattleCalculatorForm() {
               </FormField>
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Special Bonuses */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            Special Bonuses (Optional)
-            <HelpTooltip title={HELP_TEXT.specialBonuses.title} content={HELP_TEXT.specialBonuses.content} />
-          </CardTitle>
-          <CardDescription>Enter special bonuses like squad bonuses, pet skills, etc.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder="Squads' Attack Bonus&#10;+15%  +10%&#10;&#10;Enemy Lethality Penalty&#10;-8%"
-            value={specialBonuses}
-            onChange={(e) => setSpecialBonuses(e.target.value)}
-            className="min-h-[100px] font-mono text-sm"
-          />
         </CardContent>
       </Card>
 
@@ -618,22 +599,16 @@ export function BattleCalculatorForm() {
               </SelectContent>
             </Select>
           </FormField>
-
-          <FormField label="March Size (Optional)" helpText={HELP_TEXT.marchSize} error={errors.marchSize}>
+          <FormField label="March Size" helpText={HELP_TEXT.marchSize} error={errors.marchSize}>
             <Input
               type="text"
               inputMode="numeric"
-              placeholder="Auto-filled if detected"
+              placeholder="e.g., 500,000"
               value={marchSize}
               onChange={(e) => setMarchSize(e.target.value)}
             />
           </FormField>
-
-          <FormField
-            label="Target Win Percentage (Optional)"
-            helpText={HELP_TEXT.targetWin}
-            error={errors.targetWinPercentage}
-          >
+          <FormField label="Target Win % (Optional)" helpText={HELP_TEXT.targetWin} error={errors.targetWinPercentage}>
             <Input
               type="text"
               inputMode="numeric"
@@ -645,28 +620,30 @@ export function BattleCalculatorForm() {
         </CardContent>
       </Card>
 
-      {/* Debug Section */}
-      {debugInfo && (
-        <Card>
-          <CardContent className="pt-6">
-            <details>
-              <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
-                Debug OCR Info
-              </summary>
-              <pre className="mt-2 text-xs bg-muted p-4 rounded overflow-auto">
-                {JSON.stringify(debugInfo, null, 2)}
-              </pre>
-            </details>
-          </CardContent>
-        </Card>
-      )}
+      {/* Special Bonuses (Optional) */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Special Bonuses (Optional)</CardTitle>
+          <CardDescription>Add special bonuses for both sides</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FormField label="Special Bonuses" helpText={HELP_TEXT.specialBonuses}>
+            <Textarea
+              placeholder="Enter special bonuses in two-column format..."
+              value={specialBonuses}
+              onChange={(e) => setSpecialBonuses(e.target.value)}
+              className="min-h-[100px] font-mono text-sm"
+            />
+          </FormField>
+        </CardContent>
+      </Card>
 
       {/* Calculate Button */}
       <div className="flex justify-center">
         <Button
           size="lg"
           onClick={handleCalculate}
-          disabled={isCalculating || isOcrProcessingEnemy || isOcrProcessingMy}
+          disabled={isCalculating}
           className="min-w-[200px]"
         >
           {isCalculating ? (
@@ -685,6 +662,18 @@ export function BattleCalculatorForm() {
 
       {/* Results */}
       {result && <BattleResults result={result} />}
+
+      {/* Debug Info (Optional) */}
+      {debugInfo && (
+        <Card className="border-dashed">
+          <CardHeader>
+            <CardTitle className="text-sm">OCR Debug Info</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <pre className="text-xs overflow-auto">{JSON.stringify(debugInfo, null, 2)}</pre>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

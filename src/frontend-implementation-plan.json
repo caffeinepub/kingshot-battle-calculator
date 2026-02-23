@@ -1,168 +1,103 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Implement Enhanced OCR-Based Image Upload with Auto-Extraction",
+  "title": "Activate OCR image upload functionality",
   "requirements": [
     {
-      "id": "REQ-24",
-      "summary": "Add tesseract.js as a frontend dependency to enable OCR processing of uploaded scout report images",
+      "id": "REQ-33",
+      "summary": "Remove 'coming soon' placeholder text from both My Troops and Enemy Troops image upload buttons",
       "acceptanceCriteria": [
-        "tesseract.js is added to frontend/package.json dependencies",
-        "The library can be imported and used in frontend components"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/package.json",
-          "operation": "modify",
-          "description": "Add tesseract.js to dependencies section to enable OCR capabilities in the browser"
-        }
-      ]
-    },
-    {
-      "id": "REQ-25",
-      "summary": "Create extractScoutFromImage utility function that performs full-image OCR, extracts march size and troop counts using pattern matching, crops troop icon regions, performs OCR on bottom strip for Roman numerals (I-XI) to detect tier, performs OCR on top-right corner for TG digit (1-5), and returns structured data",
-      "acceptanceCriteria": [
-        "Function accepts File input and returns Promise with extracted data",
-        "Full-image OCR extracts march size using patterns like 'March Size: 123,456' or 'March: 123456'",
-        "Full-image OCR extracts troop counts using patterns like 'Infantry 123,456', 'Cavalry: 12,345', 'Archers 9,999'",
-        "Icon region is cropped at initial estimates: iconX = W * 0.08, iconY = W * 0.33, iconSize = W * 0.10",
-        "Bottom strip (70-100% of icon height) is OCR'd with whitelist 'IVX' for Roman numerals",
-        "Top-right corner (0-32% width, 0-32% height of icon) is OCR'd with whitelist 'TG12345' for TG level",
-        "romanToTier helper converts Roman numerals I-XI to tier numbers 1-11",
-        "TG extraction supports patterns 'TG3' or just '3' and returns 1-5 or null",
-        "Returns debug object with romanText, tgText, and iconBox coordinates for tuning"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/utils/ocrExtraction.ts",
-          "operation": "create",
-          "description": "Create main OCR extraction utility that orchestrates full-image text OCR using tesseract.js, icon region cropping based on screen dimensions, targeted OCR on bottom strip for tier detection (Roman numerals I-XI with whitelist 'IVX'), targeted OCR on top-right corner for TG level (digits 1-5 with whitelist 'TG12345'), and returns structured extraction result with fullText, marchSize, counts (infantry/cavalry/archer), inferred tier and tgLevel, and debug info (romanText, tgText, iconBox coordinates). Uses text parsing utilities for pattern matching and canvas utilities for preprocessing. Returns Promise with ScoutExtractionResult interface containing all extracted and inferred data"
-        }
-      ]
-    },
-    {
-      "id": "REQ-26",
-      "summary": "Create canvas preprocessing utilities including imageFileToCanvas, cropCanvas, and preprocessForOcr for improved OCR accuracy",
-      "acceptanceCriteria": [
-        "imageFileToCanvas loads image from File object and draws to canvas",
-        "cropCanvas accepts source canvas and x, y, w, h parameters and returns cropped canvas",
-        "preprocessForOcr converts to grayscale using formula: 0.299*r + 0.587*g + 0.114*b",
-        "preprocessForOcr applies binary threshold at 160 (values > 160 become 255, else 0)",
-        "All canvas operations handle edge cases and return valid HTMLCanvasElement"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/utils/canvasUtils.ts",
-          "operation": "create",
-          "description": "Create canvas preprocessing utilities: imageFileToCanvas converts File to HTMLCanvasElement by creating Image element, loading file as data URL, and drawing to canvas; cropCanvas extracts sub-region from source canvas using x, y, w, h parameters and returns new cropped canvas; preprocessForOcr applies grayscale conversion (0.299*r + 0.587*g + 0.114*b) followed by binary threshold at 160 (values > 160 become 255, else 0) for improved OCR accuracy. All functions handle edge cases and return valid canvas elements"
-        }
-      ]
-    },
-    {
-      "id": "REQ-27",
-      "summary": "Create text parsing utilities including normalizeOcrText, parseNumberLoose, romanToTier, extractMarchSizeFromText, and extractTroopCountsFromText",
-      "acceptanceCriteria": [
-        "normalizeOcrText replaces \\u00A0 with space, removes pipe characters, normalizes multiple spaces",
-        "parseNumberLoose removes all non-digit characters and returns finite number or null",
-        "romanToTier maps I-XI to 1-11 and returns null for invalid input",
-        "extractMarchSizeFromText tests patterns: 'march\\s*size\\s*[:\\-]?\\s*([\\d,\\s]{3,})', '\\bmarch\\b\\s*[:\\-]?\\s*([\\d,\\s]{3,})', 'troops\\s*sent\\s*[:\\-]?\\s*([\\d,\\s]{3,})'",
-        "extractTroopCountsFromText matches 'Infantry', 'Cavalry', 'Archer|Archers' labels with optional colons/dashes and returns object with infantry, cavalry, archer counts"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/utils/textParsing.ts",
-          "operation": "create",
-          "description": "Create text parsing utilities for OCR results: normalizeOcrText cleans OCR output by replacing \\u00A0 with space, removing pipe characters, and normalizing whitespace; parseNumberLoose strips non-digit characters and parses numbers with commas/spaces; romanToTier converts Roman numerals I-XI to tier numbers 1-11; extractMarchSizeFromText uses regex patterns to extract march size from text ('march\\s*size\\s*[:\\-]?\\s*([\\d,\\s]{3,})', '\\bmarch\\b\\s*[:\\-]?\\s*([\\d,\\s]{3,})', 'troops\\s*sent\\s*[:\\-]?\\s*([\\d,\\s]{3,})'); extractTroopCountsFromText uses regex patterns to match Infantry, Cavalry, Archer/Archers labels with optional colons/dashes and returns object with infantry, cavalry, archer counts"
-        }
-      ]
-    },
-    {
-      "id": "REQ-28",
-      "summary": "Update BattleCalculatorForm to integrate OCR extraction: on image upload immediately call extractScoutFromImage, auto-populate scout paste textarea, auto-fill march size, auto-populate tier and TG level dropdowns, auto-fill troop counts, and display loading state during OCR processing",
-      "acceptanceCriteria": [
-        "Image upload handler calls extractScoutFromImage and awaits result",
-        "Scout paste textarea is auto-populated with res.fullText",
-        "March size input is auto-filled from res.marchSize if present, or from sum of troop counts if marchSize is null",
-        "Tier dropdown is auto-populated from res.inferred.tier if present",
-        "TG level dropdown is auto-populated from res.inferred.tgLevel if present",
-        "Infantry, cavalry, and archer counts are auto-populated from res.counts",
-        "Loading indicator displays 'Reading image…' during OCR processing",
-        "All auto-filled fields remain editable for manual corrections",
-        "File input is cleared after upload (e.target.value = '') to allow re-upload of same file"
+        "Upload buttons display actionable text like 'Upload scout image' instead of 'Or upload your scout image (coming soon)'",
+        "No placeholder text suggests the feature is unavailable"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/BattleCalculatorForm.tsx",
           "operation": "modify",
-          "description": "Import extractScoutFromImage from utils/ocrExtraction.ts and integrate OCR processing into image upload handlers. Update handleMyImageUpload and handleEnemyImageUpload to: set loading state ('Reading image…'), call extractScoutFromImage with uploaded file, await OCR result, auto-populate scout paste textarea with res.fullText, auto-fill march size from res.marchSize or sum of troop counts if marchSize is null, auto-populate tier dropdown from res.inferred.tier if present, auto-populate TG level dropdown from res.inferred.tgLevel if present, auto-fill infantry/cavalry/archer counts from res.counts, clear loading state, and clear file input (e.target.value = '') to allow re-upload. All auto-filled fields remain editable for manual corrections. Preserve existing validation logic from validation.ts and maintain current state management patterns"
+          "description": "Update upload button labels for both My Troops and Enemy Troops sections: change 'Or upload your scout image (coming soon)' to 'Or upload scout image' and 'Or upload enemy scout image (coming soon)' to 'Or upload enemy scout image'. Remove any disabled states or placeholder styling that suggests unavailability."
         }
       ]
     },
     {
-      "id": "REQ-29",
-      "summary": "Handle separate image uploads for My Troops and Enemy Troops independently: route extraction results to correct state based on which upload button was clicked",
+      "id": "REQ-34",
+      "summary": "Remove error alert that displays when users click upload buttons",
       "acceptanceCriteria": [
-        "My Troops image upload button has separate onFileChange handler that updates myTroops state",
-        "Enemy Troops image upload button has separate onFileChange handler that updates enemyTroops state",
-        "Each handler routes extraction results to correct side without affecting the other",
-        "State updates use functional setState pattern to preserve existing values: setMyTroops(prev => ({ ...prev, ...newData }))"
+        "No error alert appears when upload buttons are clicked",
+        "Upload buttons trigger file picker instead of showing error messages"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/BattleCalculatorForm.tsx",
           "operation": "modify",
-          "description": "Ensure separate image upload handlers (handleMyImageUpload and handleEnemyImageUpload) route OCR extraction results to correct state without cross-contamination. Each handler updates only its respective side's data (myTroops vs enemyTroops) using functional setState pattern: setMyTroops(prev => ({ ...prev, ...extractedData })) and setEnemyTroops(prev => ({ ...prev, ...extractedData })). Maintain separation between My Troops and Enemy Troops data throughout the OCR integration"
+          "description": "Remove the error alert logic that shows 'Image OCR feature is not yet available. Please paste scout data manually or contact support to enable this feature.' when upload buttons are clicked. Remove any conditional checks that prevent file picker from opening. Ensure both upload buttons immediately trigger file input elements without error messages."
         }
       ]
     },
     {
-      "id": "REQ-30",
-      "summary": "Add optional debug section in BattleCalculatorForm that displays OCR extraction debug info including romanText, tgText, iconBox coordinates in collapsible details element",
+      "id": "REQ-35",
+      "summary": "Connect upload buttons to extractScoutFromImage function for immediate image processing",
       "acceptanceCriteria": [
-        "Debug section is wrapped in <details> element with <summary>Debug</summary>",
-        "Displays res.debug object as formatted JSON with 2-space indentation",
-        "Shows romanText, tgText, and iconBox coordinates after OCR processing",
-        "Section is collapsible to avoid cluttering the UI during normal use"
+        "Clicking My Troops upload button opens file picker and processes selected image through extractScoutFromImage",
+        "Clicking Enemy Troops upload button opens file picker and processes selected image through extractScoutFromImage",
+        "Each upload routes extraction results to correct state (myTroops vs enemyTroops) without cross-contamination"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/BattleCalculatorForm.tsx",
           "operation": "modify",
-          "description": "Add optional debug section displaying OCR extraction debug info wrapped in <details> element with <summary>Debug</summary>. Store debug data from res.debug in component state during OCR processing. Display romanText, tgText, and iconBox coordinates (iconX, iconY, iconSize, W, H) as formatted JSON with 2-space indentation using JSON.stringify. Section is collapsible to avoid cluttering the UI during normal use. Place debug section near the relevant image upload area for easy reference when tuning icon position estimates"
+          "description": "Wire both My Troops and Enemy Troops upload buttons to the extractScoutFromImage function from ocrExtraction.ts. Implement file input handlers that: (1) accept image files from file picker, (2) call extractScoutFromImage with the selected file, (3) route extraction results to correct state variables (myScoutPaste for My Troops, enemyScoutPaste for Enemy Troops), (4) set separate loading states (isLoadingPlayerImage, isLoadingEnemyImage) during processing, (5) handle extraction success by populating form fields, (6) maintain state isolation between My Troops and Enemy Troops workflows to prevent cross-contamination."
         }
       ]
     },
     {
-      "id": "REQ-31",
-      "summary": "Update error handling for image upload to catch OCR failures, display user-friendly error messages, and provide guidance on ensuring clear scout report screenshots",
+      "id": "REQ-36",
+      "summary": "Verify OCR extraction correctly identifies tier (Roman numerals I-XI) and TG level (digits 1-5) from scout report images",
       "acceptanceCriteria": [
-        "Image upload handler wraps extractScoutFromImage in try-catch block",
-        "Displays error message when OCR processing throws exception",
-        "Error message includes guidance: 'Could not extract scout data. Please ensure the image shows a clear Kingshot scout report.'",
-        "Loading state is properly cleared in finally block regardless of success or failure"
+        "OCR correctly extracts Roman numeral 'X' from bottom of troop icons and converts to Tier 10",
+        "OCR correctly extracts digit '3' from top-right corner of troop icons and identifies as TG Level 3",
+        "Tier and TG dropdowns auto-populate with extracted values after image processing",
+        "Extraction works for all tier values (I-XI) and TG levels (1-5)"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/BattleCalculatorForm.tsx",
           "operation": "modify",
-          "description": "Wrap extractScoutFromImage calls in try-catch blocks within both image upload handlers. Catch OCR processing exceptions and display user-friendly error message: 'Could not extract scout data. Please ensure the image shows a clear Kingshot scout report.' Use existing error state management pattern from the component. Clear loading state in finally block regardless of success or failure to ensure UI remains responsive. Maintain consistency with existing error handling patterns in the form"
+          "description": "After extractScoutFromImage returns parsed data, auto-populate tier and TG dropdowns for the appropriate troop section (My Troops or Enemy Troops). Use the existing textParsing utilities that convert Roman numerals (I-XI) to tier values (1-11) and extract TG digits (1-5). Ensure tier dropdown selects the extracted tier value and TG dropdown selects the extracted TG level. Maintain separate tier/TG state for myTroops vs enemyTroops to prevent conflicts."
         }
       ]
     },
     {
-      "id": "REQ-32",
-      "summary": "Ensure march size field remains optional and editable: do not lock or disable the input after auto-fill, clearly indicate in placeholder text that the field is 'Auto-filled if detected'",
+      "id": "REQ-37",
+      "summary": "Ensure complete OCR workflow auto-populates all form fields while keeping them editable",
       "acceptanceCriteria": [
-        "March size input is never disabled or read-only",
-        "Placeholder text displays 'Auto-filled if detected' or similar",
-        "Users can type in or modify the march size value at any time",
-        "Auto-fill sets the value but does not prevent manual changes"
+        "Scout paste textarea displays OCR extracted text after image upload",
+        "March size field auto-fills from extracted value or troop total sum",
+        "Tier and TG dropdowns auto-select based on extracted Roman numerals and digits",
+        "Troop count fields (infantry/cavalry/archer) populate with extracted values",
+        "All auto-filled fields remain editable for user corrections",
+        "Loading state displays during OCR processing"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/BattleCalculatorForm.tsx",
           "operation": "modify",
-          "description": "Update march size input field to ensure it remains optional and editable after OCR auto-fill. Never disable or set read-only attribute on the input. Update placeholder text to 'Auto-filled if detected' or similar to indicate optional auto-fill behavior. Users can type in or modify the march size value at any time. Auto-fill sets the value but does not prevent manual changes. Maintain existing validation logic from validation.ts for march size field"
+          "description": "Implement comprehensive form auto-population after successful OCR extraction: (1) populate scout paste textarea (myScoutPaste or enemyScoutPaste) with extracted text, (2) auto-fill march size field from extracted value or sum of troop counts, (3) auto-select tier and TG dropdowns based on extracted Roman numerals and digits, (4) populate troop count fields (infantry/cavalry/archer) with extracted values, (5) display loading state (spinner or indicator) using isLoadingPlayerImage or isLoadingEnemyImage during processing, (6) ensure all auto-filled fields remain editable by preserving controlled input state and allowing user modifications after auto-fill."
+        }
+      ]
+    },
+    {
+      "id": "REQ-38",
+      "summary": "Display clear, actionable error messages when OCR extraction fails",
+      "acceptanceCriteria": [
+        "Failed extractions show specific error messages like 'Could not extract scout data. Please ensure the image shows a clear Kingshot scout report with visible troop icons.'",
+        "Error messages provide guidance on image quality requirements",
+        "Extraction failures do not crash the application or leave UI in broken state"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/BattleCalculatorForm.tsx",
+          "operation": "modify",
+          "description": "Wrap extractScoutFromImage calls in try-catch blocks to handle OCR failures gracefully. Display user-friendly error messages that guide users on image requirements: 'Could not extract scout data. Please ensure the image shows a clear Kingshot scout report with visible troop icons and stat bonuses.' Use existing error state management to show error alerts without crashing the UI. Clear loading states on error. Preserve any partial extraction results and allow users to manually correct or retry with a different image."
         }
       ]
     }

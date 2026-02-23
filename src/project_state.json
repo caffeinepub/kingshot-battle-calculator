@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
+  "projectStateVersion": 13,
   "summary": "Kingshot Battle Calculator - A user-friendly battle calculator for Kingshot PvP combat with probabilistic estimations based on troop stats, formation, and RNG skills",
   "architectural_notes": [
     "Core engine (kingshotCore.ts) handles Monte Carlo battle simulation with troop counter mechanics",
@@ -14,8 +14,10 @@
     "Required march size calculator uses binary search up to 10x scale",
     "March size auto-derived from scout troop counts when available, falls back to manual input"
   ],
-  "known_issues": [],
-  "isFixRequest": false,
+  "known_issues": [
+    "OCR upload buttons display 'coming soon' placeholder and error alerts instead of triggering extractScoutFromImage function"
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-create-a-frontend-interface-with-input-fields-for-1-my-troops-scout-paste-area-2-enemy-troops-scout-paste-area-or-manual-entry-total-troops-infantry-cavalry-3-tier-tg-selection-for-both-sides-4-notes-on-special-bonuses-two-column-input-5-battle-type-selector-6-march-size-input-and-7-target-win-slider",
@@ -232,6 +234,54 @@
         "REQ-32"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-all-coming-soon-placeholder-text-from-both-my-troops-and-enemy-troops-image-upload-buttons-in-battlecalculatorform",
+      "title": "Remove all 'coming soon' placeholder text from both My Troops and Enemy Troops image upload buttons in BattleCalculatorForm",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-error-alert-message-image-ocr-feature-is-not-yet-available-please-paste-scout-data-manually-or-contact-support-to-enable-this-feature-that-appears-when-users-click-the-upload-buttons",
+      "title": "Remove the error alert message 'Image OCR feature is not yet available. Please paste scout data manually or contact support to enable this feature.' that appears when users click the upload buttons",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-connect-both-my-troops-and-enemy-troops-upload-buttons-to-the-existing-extractscoutfromimage-function-in-ocrextraction-ts-to-process-uploaded-images-immediately",
+      "title": "Connect both My Troops and Enemy Troops upload buttons to the existing extractScoutFromImage function in ocrExtraction.ts to process uploaded images immediately",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-the-ocr-extraction-workflow-correctly-identifies-tier-roman-numerals-i-xi-at-bottom-of-troop-icons-and-tg-level-digit-1-5-at-top-right-corner-of-troop-icons-from-the-uploaded-scout-report-images-as-shown-in-the-user-s-circled-examples-where-x-represents-tier-10-and-3-represents-tg-level-3",
+      "title": "Verify the OCR extraction workflow correctly identifies tier (Roman numerals I-XI at bottom of troop icons) and TG level (digit 1-5 at top-right corner of troop icons) from the uploaded scout report images, as shown in the user's circled examples where 'X' represents Tier 10 and '3' represents TG Level 3",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-complete-ocr-workflow-auto-populates-all-form-fields-after-successful-image-extraction-scout-paste-textarea-with-full-extracted-text-march-size-field-tier-and-tg-dropdowns-and-troop-counts-infantry-cavalry-archer-while-keeping-all-fields-editable-for-manual-corrections",
+      "title": "Ensure the complete OCR workflow auto-populates all form fields after successful image extraction: scout paste textarea with full extracted text, march size field, tier and TG dropdowns, and troop counts (infantry/cavalry/archer), while keeping all fields editable for manual corrections",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-clear-actionable-error-messages-when-ocr-extraction-fails-guiding-users-to-ensure-their-screenshot-shows-a-clear-kingshot-scout-report-with-visible-troop-icons-and-stat-bonuses",
+      "title": "Display clear, actionable error messages when OCR extraction fails, guiding users to ensure their screenshot shows a clear Kingshot scout report with visible troop icons and stat bonuses",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -321,6 +371,12 @@
       "reqIds": [
         "REQ-24"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Remove 'coming soon' placeholder text and error alerts from OCR upload buttons, connect buttons to extractScoutFromImage function, and activate the working OCR extraction workflow for both My Troops and Enemy Troops sections",
+      "reqIds": [],
       "status": "pending"
     }
   ],

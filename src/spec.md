@@ -1,17 +1,15 @@
 # Specification
 
 ## Summary
-**Goal:** Add OCR-based image upload feature that automatically extracts scout report data from screenshots.
+**Goal:** Activate the OCR image upload functionality by removing placeholder text and connecting upload buttons to the existing extraction system.
 
 **Planned changes:**
-- Add tesseract.js dependency to frontend for OCR processing
-- Create extractScoutFromImage utility that performs full-image OCR, extracts march size and troop counts, crops icon regions to detect tier (Roman numerals) and TG level (1-5 digit)
-- Create canvas preprocessing utilities (imageFileToCanvas, cropCanvas, preprocessForOcr with grayscale and binary threshold)
-- Create text parsing utilities (normalizeOcrText, parseNumberLoose, romanToTier, extractMarchSizeFromText, extractTroopCountsFromText)
-- Update BattleCalculatorForm to trigger OCR on image upload and auto-populate scout textarea, march size, tier, TG level, and troop counts
-- Handle separate image uploads for My Troops and Enemy Troops independently
-- Add optional collapsible debug section showing OCR extraction details (romanText, tgText, iconBox coordinates)
-- Add error handling with user-friendly messages for OCR failures
-- Keep all auto-filled fields editable and optional for manual override
+- Remove "coming soon" placeholder text from My Troops and Enemy Troops upload buttons
+- Remove error alert that appears when users click upload buttons stating the OCR feature is unavailable
+- Connect both upload buttons to the existing extractScoutFromImage function to process uploaded images immediately
+- Verify OCR correctly extracts tier (Roman numerals I-XI from bottom of troop icons) and TG level (digits 1-5 from top-right corner of troop icons)
+- Auto-populate all form fields after successful extraction: scout paste textarea, march size, tier/TG dropdowns, and troop counts (infantry/cavalry/archer)
+- Display clear error messages when OCR extraction fails, guiding users on image quality requirements
+- Keep all auto-filled fields editable for manual corrections
 
-**User-visible outcome:** Users can upload scout report screenshots and have all battle data automatically extracted and populated, eliminating manual data entry while retaining the ability to review and edit extracted values.
+**User-visible outcome:** Users can click the upload buttons on both My Troops and Enemy Troops sections to upload Kingshot scout report screenshots, which are automatically processed via OCR to extract and populate troop composition data including tier levels, TG levels, troop counts, and stat bonuses into the form fields.

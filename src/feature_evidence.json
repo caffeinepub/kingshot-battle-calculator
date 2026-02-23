@@ -2,62 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-extractscoutfromimage-utility-function-that-performs-full-image-ocr-extracts-march-size-and-troop-counts-using-pattern-matching-crops-troop-icon-regions-performs-ocr-on-bottom-strip-for-roman-numerals-i-xi-to-detect-tier-performs-ocr-on-top-right-corner-for-tg-digit-1-5-and-returns-structured-data-including-fulltext-marchsize-counts-infantry-cavalry-archer-inferred-tier-and-tglevel-and-debug-info",
-      "featureTitle": "Create extractScoutFromImage utility function that performs full-image OCR, extracts march size and troop counts using pattern matching, crops troop icon regions, performs OCR on bottom strip for Roman numerals (I-XI) to detect tier, performs OCR on top-right corner for TG digit (1-5), and returns structured data including fullText, marchSize, counts (infantry/cavalry/archer), inferred tier and tgLevel, and debug info",
-      "files": [
-        "frontend/src/utils/ocrExtraction.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-25"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-canvas-preprocessing-utilities-including-imagefiletocanvas-converts-file-to-htmlcanvaselement-cropcanvas-extracts-sub-region-from-canvas-and-preprocessforocr-applies-grayscale-conversion-and-binary-threshold-at-160-for-improved-ocr-accuracy",
-      "featureTitle": "Create canvas preprocessing utilities including imageFileToCanvas (converts File to HTMLCanvasElement), cropCanvas (extracts sub-region from canvas), and preprocessForOcr (applies grayscale conversion and binary threshold at 160 for improved OCR accuracy)",
-      "files": [
-        "frontend/src/utils/canvasUtils.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-26"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-text-parsing-utilities-including-normalizeocrtext-removes-special-characters-and-normalizes-whitespace-parsenumberloose-strips-non-digits-and-parses-numbers-with-commas-spaces-romantotier-converts-roman-numerals-i-xi-to-tier-1-11-extractmarchsizefromtext-uses-regex-patterns-for-march-size-extraction-and-extracttroopcountsfromtext-uses-regex-patterns-for-infantry-cavalry-archer-extraction",
-      "featureTitle": "Create text parsing utilities including normalizeOcrText (removes special characters and normalizes whitespace), parseNumberLoose (strips non-digits and parses numbers with commas/spaces), romanToTier (converts Roman numerals I-XI to tier 1-11), extractMarchSizeFromText (uses regex patterns for march size extraction), and extractTroopCountsFromText (uses regex patterns for infantry/cavalry/archer extraction)",
-      "files": [
-        "frontend/src/utils/textParsing.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-27"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-battlecalculatorform-to-integrate-ocr-extraction-on-image-upload-immediately-call-extractscoutfromimage-auto-populate-the-scout-paste-textarea-with-fulltext-result-keeping-it-visible-and-editable-for-debugging-auto-fill-march-size-from-ocr-result-or-inferred-troop-totals-keeping-field-editable-auto-populate-tier-and-tg-level-dropdowns-from-inferred-values-auto-fill-troop-counts-from-extracted-counts-and-display-loading-state-during-ocr-processing",
-      "featureTitle": "Update BattleCalculatorForm to integrate OCR extraction: on image upload immediately call extractScoutFromImage, auto-populate the scout paste textarea with fullText result (keeping it visible and editable for debugging), auto-fill march size from OCR result or inferred troop totals (keeping field editable), auto-populate tier and TG level dropdowns from inferred values, auto-fill troop counts from extracted counts, and display loading state during OCR processing",
+      "featureId": "feature-remove-all-coming-soon-placeholder-text-from-both-my-troops-and-enemy-troops-image-upload-buttons-in-battlecalculatorform",
+      "featureTitle": "Remove all 'coming soon' placeholder text from both My Troops and Enemy Troops image upload buttons in BattleCalculatorForm",
       "files": [
         "frontend/src/components/BattleCalculatorForm.tsx"
       ],
@@ -69,13 +15,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-28"
+        "REQ-33"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-handle-separate-image-uploads-for-my-troops-and-enemy-troops-independently-route-extraction-results-to-correct-state-mytroops-vs-enemytroops-based-on-which-upload-button-was-clicked-ensure-each-upload-only-affects-its-respective-side-s-data-without-cross-contamination",
-      "featureTitle": "Handle separate image uploads for My Troops and Enemy Troops independently: route extraction results to correct state (myTroops vs enemyTroops) based on which upload button was clicked, ensure each upload only affects its respective side's data without cross-contamination",
+      "featureId": "feature-remove-the-error-alert-message-image-ocr-feature-is-not-yet-available-please-paste-scout-data-manually-or-contact-support-to-enable-this-feature-that-appears-when-users-click-the-upload-buttons",
+      "featureTitle": "Remove the error alert message 'Image OCR feature is not yet available. Please paste scout data manually or contact support to enable this feature.' that appears when users click the upload buttons",
       "files": [
         "frontend/src/components/BattleCalculatorForm.tsx"
       ],
@@ -87,13 +33,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-29"
+        "REQ-34"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-optional-debug-section-in-battlecalculatorform-that-displays-ocr-extraction-debug-info-including-romantext-tgtext-iconbox-coordinates-iconx-icony-iconsize-w-h-in-collapsible-details-element-helping-users-tune-icon-position-estimates-for-their-specific-screenshot-layouts",
-      "featureTitle": "Add optional debug section in BattleCalculatorForm that displays OCR extraction debug info including romanText, tgText, iconBox coordinates (iconX, iconY, iconSize, W, H) in collapsible details element, helping users tune icon position estimates for their specific screenshot layouts",
+      "featureId": "feature-connect-both-my-troops-and-enemy-troops-upload-buttons-to-the-existing-extractscoutfromimage-function-in-ocrextraction-ts-to-process-uploaded-images-immediately",
+      "featureTitle": "Connect both My Troops and Enemy Troops upload buttons to the existing extractScoutFromImage function in ocrExtraction.ts to process uploaded images immediately",
       "files": [
         "frontend/src/components/BattleCalculatorForm.tsx"
       ],
@@ -105,13 +51,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-30"
+        "REQ-35"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-error-handling-for-image-upload-to-catch-ocr-failures-display-user-friendly-error-messages-when-extraction-fails-and-provide-guidance-on-ensuring-clear-scout-report-screenshots",
-      "featureTitle": "Update error handling for image upload to catch OCR failures, display user-friendly error messages when extraction fails, and provide guidance on ensuring clear scout report screenshots",
+      "featureId": "feature-verify-the-ocr-extraction-workflow-correctly-identifies-tier-roman-numerals-i-xi-at-bottom-of-troop-icons-and-tg-level-digit-1-5-at-top-right-corner-of-troop-icons-from-the-uploaded-scout-report-images-as-shown-in-the-user-s-circled-examples-where-x-represents-tier-10-and-3-represents-tg-level-3",
+      "featureTitle": "Verify the OCR extraction workflow correctly identifies tier (Roman numerals I-XI at bottom of troop icons) and TG level (digit 1-5 at top-right corner of troop icons) from the uploaded scout report images, as shown in the user's circled examples where 'X' represents Tier 10 and '3' represents TG Level 3",
       "files": [
         "frontend/src/components/BattleCalculatorForm.tsx"
       ],
@@ -123,13 +69,13 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-31"
+        "REQ-36"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-march-size-field-remains-optional-and-editable-do-not-lock-or-disable-the-input-after-auto-fill-clearly-indicate-in-placeholder-text-that-the-field-is-auto-filled-if-detected-allow-users-to-manually-override-auto-filled-values",
-      "featureTitle": "Ensure march size field remains optional and editable: do not lock or disable the input after auto-fill, clearly indicate in placeholder text that the field is 'Auto-filled if detected', allow users to manually override auto-filled values",
+      "featureId": "feature-ensure-the-complete-ocr-workflow-auto-populates-all-form-fields-after-successful-image-extraction-scout-paste-textarea-with-full-extracted-text-march-size-field-tier-and-tg-dropdowns-and-troop-counts-infantry-cavalry-archer-while-keeping-all-fields-editable-for-manual-corrections",
+      "featureTitle": "Ensure the complete OCR workflow auto-populates all form fields after successful image extraction: scout paste textarea with full extracted text, march size field, tier and TG dropdowns, and troop counts (infantry/cavalry/archer), while keeping all fields editable for manual corrections",
       "files": [
         "frontend/src/components/BattleCalculatorForm.tsx"
       ],
@@ -141,7 +87,25 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-32"
+        "REQ-37"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-display-clear-actionable-error-messages-when-ocr-extraction-fails-guiding-users-to-ensure-their-screenshot-shows-a-clear-kingshot-scout-report-with-visible-troop-icons-and-stat-bonuses",
+      "featureTitle": "Display clear, actionable error messages when OCR extraction fails, guiding users to ensure their screenshot shows a clear Kingshot scout report with visible troop icons and stat bonuses",
+      "files": [
+        "frontend/src/components/BattleCalculatorForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-38"
       ],
       "confidence": "high"
     }
