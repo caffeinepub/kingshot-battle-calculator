@@ -1,0 +1,127 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-23T03:45:49.729Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 9,
+    "implemented": 8,
+    "items": [
+      {
+        "id": "REQ-24",
+        "summary": "Add tesseract.js as a frontend dependency to enable OCR processing of uploaded scout report images",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/package.json"
+        ],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-25",
+        "summary": "Create extractScoutFromImage utility function that performs full-image OCR, extracts march size and troop counts using pattern matching, crops troop icon regions, performs OCR on bottom strip for Roman numerals (I-XI) to detect tier, performs OCR on top-right corner for TG digit (1-5), and returns structured data including fullText, marchSize, counts (infantry/cavalry/archer), inferred tier and tgLevel, and debug info",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/ocrExtraction.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/ocrExtraction.ts"
+        ]
+      },
+      {
+        "id": "REQ-26",
+        "summary": "Create canvas preprocessing utilities including imageFileToCanvas (converts File to HTMLCanvasElement), cropCanvas (extracts sub-region from canvas), and preprocessForOcr (applies grayscale conversion and binary threshold at 160 for improved OCR accuracy)",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/canvasUtils.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/canvasUtils.ts"
+        ]
+      },
+      {
+        "id": "REQ-27",
+        "summary": "Create text parsing utilities including normalizeOcrText (removes special characters and normalizes whitespace), parseNumberLoose (strips non-digits and parses numbers with commas/spaces), romanToTier (converts Roman numerals I-XI to tier 1-11), extractMarchSizeFromText (uses regex patterns for march size extraction), and extractTroopCountsFromText (uses regex patterns for infantry/cavalry/archer extraction)",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/textParsing.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/textParsing.ts"
+        ]
+      },
+      {
+        "id": "REQ-28",
+        "summary": "Update BattleCalculatorForm to integrate OCR extraction: on image upload immediately call extractScoutFromImage, auto-populate the scout paste textarea with fullText result (keeping it visible and editable for debugging), auto-fill march size from OCR result or inferred troop totals (keeping field editable), auto-populate tier and TG level dropdowns from inferred values, auto-fill troop counts from extracted counts, and display loading state during OCR processing",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-29",
+        "summary": "Handle separate image uploads for My Troops and Enemy Troops independently: route extraction results to correct state (myTroops vs enemyTroops) based on which upload button was clicked, ensure each upload only affects its respective side's data without cross-contamination",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-30",
+        "summary": "Add optional debug section in BattleCalculatorForm that displays OCR extraction debug info including romanText, tgText, iconBox coordinates (iconX, iconY, iconSize, W, H) in collapsible details element, helping users tune icon position estimates for their specific screenshot layouts",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-31",
+        "summary": "Update error handling for image upload to catch OCR failures, display user-friendly error messages when extraction fails, and provide guidance on ensuring clear scout report screenshots",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-32",
+        "summary": "Ensure march size field remains optional and editable: do not lock or disable the input after auto-fill, clearly indicate in placeholder text that the field is 'Auto-filled if detected', allow users to manually override auto-filled values",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/BattleCalculatorForm.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/BattleCalculatorForm.tsx",
+    "frontend/src/constants/helpText.ts",
+    "frontend/src/utils/canvasUtils.ts",
+    "frontend/src/utils/ocrExtraction.ts",
+    "frontend/src/utils/textParsing.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

@@ -1,0 +1,330 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 11,
+  "summary": "Kingshot Battle Calculator - A user-friendly battle calculator for Kingshot PvP combat with probabilistic estimations based on troop stats, formation, and RNG skills",
+  "architectural_notes": [
+    "Core engine (kingshotCore.ts) handles Monte Carlo battle simulation with troop counter mechanics",
+    "Formation search uses coarse-then-refine algorithm optimizing win probability",
+    "Stats system: Attack, Defense, Lethality, HP with percentage-based bonuses",
+    "RNG skills modeled: Volley (T7+ Archers), Howling Wind (TG3 Archers), Assault Lance (TG3 Cavalry)",
+    "Counter system: Infantry > Cavalry, Cavalry > Archers, Archers > Infantry",
+    "Diminishing returns via sqrt(troops) scaling",
+    "Special bonuses system for squads buffs/debuffs and pet skills",
+    "Scout text parser extracts troop counts and stat bonuses automatically",
+    "Required march size calculator uses binary search up to 10x scale",
+    "March size auto-derived from scout troop counts when available, falls back to manual input"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-frontend-interface-with-input-fields-for-1-my-troops-scout-paste-area-2-enemy-troops-scout-paste-area-or-manual-entry-total-troops-infantry-cavalry-3-tier-tg-selection-for-both-sides-4-notes-on-special-bonuses-two-column-input-5-battle-type-selector-6-march-size-input-and-7-target-win-slider",
+      "title": "Create a frontend interface with input fields for: (1) My Troops scout paste area, (2) Enemy Troops scout paste area or manual entry (total troops, infantry %, cavalry %), (3) Tier/TG selection for both sides, (4) Notes on Special Bonuses two-column input, (5) Battle Type selector, (6) March Size input, and (7) Target Win % slider",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-calculation-results-including-1-win-probability-percentage-with-clear-visual-indicator-2-best-formation-as-percentages-infantry-cavalry-archers-3-recommended-troop-counts-for-best-formation-4-required-march-size-to-achieve-target-win-rate-if-achievable-5-best-achievable-win-at-maximum-scale-with-troop-counts",
+      "title": "Display calculation results including: (1) Win probability percentage with clear visual indicator, (2) Best formation as percentages (Infantry/Cavalry/Archers), (3) Recommended troop counts for best formation, (4) Required march size to achieve target win rate (if achievable), (5) Best achievable win % at maximum scale with troop counts",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-helper-text-and-tooltips-explaining-1-scout-paste-format-expectations-2-counter-mechanics-infantry-cavalry-cavalry-archers-archers-infantry-3-rng-skills-by-tier-tg-4-special-bonuses-format-with-two-column-layout-left-you-right-enemy-5-battle-type-intensity-effects",
+      "title": "Implement helper text and tooltips explaining: (1) Scout paste format expectations, (2) Counter mechanics (Infantry > Cavalry, Cavalry > Archers, Archers > Infantry), (3) RNG skills by tier/TG, (4) Special bonuses format with two-column layout (left=you, right=enemy), (5) Battle type intensity effects",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-a-visually-cohesive-interface-with-a-modern-tactical-military-theme-using-dark-tones-strategic-color-accents-olive-green-steel-blue-amber-clear-typography-with-strong-hierarchy-card-based-layout-for-input-sections-and-results-and-smooth-transitions-for-result-updates",
+      "title": "Design a visually cohesive interface with a modern tactical/military theme using dark tones, strategic color accents (olive green, steel blue, amber), clear typography with strong hierarchy, card-based layout for input sections and results, and smooth transitions for result updates",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-input-validation-and-error-handling-for-1-invalid-scout-paste-formats-2-out-of-range-tier-tg-values-3-invalid-percentage-inputs-in-special-bonuses-4-zero-or-negative-march-sizes-5-invalid-manual-enemy-troop-compositions-where-percentages-exceed-100",
+      "title": "Add input validation and error handling for: (1) Invalid scout paste formats, (2) Out-of-range tier/TG values, (3) Invalid percentage inputs in special bonuses, (4) Zero or negative march sizes, (5) Invalid manual enemy troop compositions where percentages exceed 100%",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-robust-march-size-input-parsing-that-accepts-commas-and-spaces-by-stripping-all-non-numeric-characters-using-parseintloose-utility-input-replace-d-g-then-parseint-with-finite-number-validation",
+      "title": "Implement robust march size input parsing that accepts commas and spaces by stripping all non-numeric characters using parseIntLoose utility: (input || \"\").replace(/[^\\d]/g, \"\") then parseInt with finite number validation",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-auto-derive-march-size-from-my-troops-scout-report-when-troop-counts-are-present-by-summing-infantry-cavalry-archers-overriding-manual-march-size-input-completely-only-fall-back-to-manual-input-when-scout-text-is-empty-or-contains-no-troop-counts-using-sumtroops-utility",
+      "title": "Auto-derive march size from My Troops scout report when troop counts are present by summing infantry + cavalry + archers, overriding manual march size input completely. Only fall back to manual input when scout text is empty or contains no troop counts using sumTroops utility",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-current-battle-type-list-with-official-kingshot-combat-categories-1-solo-pvp-attack-defense-with-intensity-0-95-and-extraskillfactor-1-00-2-rally-attack-with-intensity-1-05-and-extraskillfactor-1-15-3-garrison-defense-with-intensity-1-00-and-extraskillfactor-1-12-4-outpost-sanctuary-fortress-battle-with-intensity-1-00-and-extraskillfactor-1-12",
+      "title": "Replace current battle type list with official Kingshot combat categories: (1) 'Solo PvP (Attack / Defense)' with intensity 0.95 and extraSkillFactor 1.00, (2) 'Rally Attack' with intensity 1.05 and extraSkillFactor 1.15, (3) 'Garrison Defense' with intensity 1.00 and extraSkillFactor 1.12, (4) 'Outpost / Sanctuary / Fortress Battle' with intensity 1.00 and extraSkillFactor 1.12",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-extraskillfactor-from-selected-battle-type-to-multiply-finalskillmod-in-combat-calculations-using-pattern-const-bt-battle-types-find-b-b-id-battletypeid-battle-types-0-finalskillmod-bt-extraskillfactor",
+      "title": "Apply extraSkillFactor from selected battle type to multiply finalSkillMod in combat calculations using pattern: const bt = BATTLE_TYPES.find(b => b.id === battleTypeId) ?? BATTLE_TYPES[0]; finalSkillMod *= bt.extraSkillFactor",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-set-formation-search-initial-guesses-based-on-battle-type-for-solo-pvp-and-rally-attack-start-from-50-infantry-20-cavalry-30-archers-for-garrison-defense-and-outpost-sanctuary-fortress-battles-start-from-60-infantry-20-cavalry-20-archers",
+      "title": "Set formation search initial guesses based on battle type: for Solo PvP and Rally Attack start from 50% infantry / 20% cavalry / 30% archers, for Garrison Defense and Outpost/Sanctuary/Fortress battles start from 60% infantry / 20% cavalry / 20% archers",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-image-upload-button-next-to-the-my-troops-scout-paste-area-that-opens-the-device-s-photo-gallery-file-picker-accepts-image-file-uploads-png-jpg-jpeg-and-triggers-ai-based-extraction-of-scout-data",
+      "title": "Add image upload button next to the My Troops scout paste area that opens the device's photo gallery/file picker, accepts image file uploads (PNG, JPG, JPEG), and triggers AI-based extraction of scout data",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-image-upload-button-next-to-the-enemy-troops-scout-paste-area-that-opens-the-device-s-photo-gallery-file-picker-accepts-image-file-uploads-png-jpg-jpeg-and-triggers-ai-based-extraction-of-scout-data",
+      "title": "Add image upload button next to the Enemy Troops scout paste area that opens the device's photo gallery/file picker, accepts image file uploads (PNG, JPG, JPEG), and triggers AI-based extraction of scout data",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-auto-populate-the-my-troops-scout-paste-textarea-with-the-ai-extracted-data-when-an-image-is-successfully-processed-maintaining-the-same-text-format-that-parsescoutpaste-expects-and-trigger-form-validation-automatically",
+      "title": "Auto-populate the My Troops scout paste textarea with the AI-extracted data when an image is successfully processed, maintaining the same text format that parseScoutPaste expects, and trigger form validation automatically",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-auto-populate-the-enemy-troops-scout-paste-textarea-with-the-ai-extracted-data-when-an-image-is-successfully-processed-maintaining-the-same-text-format-that-parsescoutpaste-expects-and-trigger-form-validation-automatically",
+      "title": "Auto-populate the Enemy Troops scout paste textarea with the AI-extracted data when an image is successfully processed, maintaining the same text format that parseScoutPaste expects, and trigger form validation automatically",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-clear-error-messages-to-the-user-when-image-upload-fails-extraction-fails-or-the-ai-cannot-parse-the-scout-report-from-the-uploaded-image-with-guidance-on-how-to-resolve-the-issue-e-g-could-not-extract-scout-data-please-ensure-the-image-shows-a-clear-kingshot-scout-report",
+      "title": "Display clear error messages to the user when image upload fails, extraction fails, or the AI cannot parse the scout report from the uploaded image, with guidance on how to resolve the issue (e.g., 'Could not extract scout data. Please ensure the image shows a clear Kingshot scout report.')",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-help-tooltip-next-to-the-image-upload-buttons-explaining-upload-a-screenshot-of-your-kingshot-scout-report-the-system-will-automatically-extract-troop-counts-and-stat-bonuses",
+      "title": "Add help tooltip next to the image upload buttons explaining: 'Upload a screenshot of your Kingshot scout report. The system will automatically extract troop counts and stat bonuses.'",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-review-and-fix-any-deployment-configuration-errors-that-caused-the-previous-deployment-failure-including-canister-settings-dfx-json-configuration-and-build-output-validation",
+      "title": "Review and fix any deployment configuration errors that caused the previous deployment failure, including canister settings, dfx.json configuration, and build output validation",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-any-typescript-compilation-errors-or-type-mismatches-that-may-be-blocking-the-frontend-build-particularly-around-the-battlecalculatorform-component-image-upload-handlers-and-kingshotcore-integration",
+      "title": "Fix any TypeScript compilation errors or type mismatches that may be blocking the frontend build, particularly around the BattleCalculatorForm component, image upload handlers, and kingshotCore integration",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-any-issues-with-the-image-upload-button-implementation-in-battlecalculatorform-that-may-cause-rendering-errors-or-event-handler-failures-ensuring-proper-file-input-handling-and-error-boundaries",
+      "title": "Fix any issues with the image upload button implementation in BattleCalculatorForm that may cause rendering errors or event handler failures, ensuring proper file input handling and error boundaries",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-extractscoutfromimage-utility-function-that-performs-full-image-ocr-extracts-march-size-and-troop-counts-using-pattern-matching-crops-troop-icon-regions-performs-ocr-on-bottom-strip-for-roman-numerals-i-xi-to-detect-tier-performs-ocr-on-top-right-corner-for-tg-digit-1-5-and-returns-structured-data-including-fulltext-marchsize-counts-infantry-cavalry-archer-inferred-tier-and-tglevel-and-debug-info",
+      "title": "Create extractScoutFromImage utility function that performs full-image OCR, extracts march size and troop counts using pattern matching, crops troop icon regions, performs OCR on bottom strip for Roman numerals (I-XI) to detect tier, performs OCR on top-right corner for TG digit (1-5), and returns structured data including fullText, marchSize, counts (infantry/cavalry/archer), inferred tier and tgLevel, and debug info",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-canvas-preprocessing-utilities-including-imagefiletocanvas-converts-file-to-htmlcanvaselement-cropcanvas-extracts-sub-region-from-canvas-and-preprocessforocr-applies-grayscale-conversion-and-binary-threshold-at-160-for-improved-ocr-accuracy",
+      "title": "Create canvas preprocessing utilities including imageFileToCanvas (converts File to HTMLCanvasElement), cropCanvas (extracts sub-region from canvas), and preprocessForOcr (applies grayscale conversion and binary threshold at 160 for improved OCR accuracy)",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-text-parsing-utilities-including-normalizeocrtext-removes-special-characters-and-normalizes-whitespace-parsenumberloose-strips-non-digits-and-parses-numbers-with-commas-spaces-romantotier-converts-roman-numerals-i-xi-to-tier-1-11-extractmarchsizefromtext-uses-regex-patterns-for-march-size-extraction-and-extracttroopcountsfromtext-uses-regex-patterns-for-infantry-cavalry-archer-extraction",
+      "title": "Create text parsing utilities including normalizeOcrText (removes special characters and normalizes whitespace), parseNumberLoose (strips non-digits and parses numbers with commas/spaces), romanToTier (converts Roman numerals I-XI to tier 1-11), extractMarchSizeFromText (uses regex patterns for march size extraction), and extractTroopCountsFromText (uses regex patterns for infantry/cavalry/archer extraction)",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-battlecalculatorform-to-integrate-ocr-extraction-on-image-upload-immediately-call-extractscoutfromimage-auto-populate-the-scout-paste-textarea-with-fulltext-result-keeping-it-visible-and-editable-for-debugging-auto-fill-march-size-from-ocr-result-or-inferred-troop-totals-keeping-field-editable-auto-populate-tier-and-tg-level-dropdowns-from-inferred-values-auto-fill-troop-counts-from-extracted-counts-and-display-loading-state-during-ocr-processing",
+      "title": "Update BattleCalculatorForm to integrate OCR extraction: on image upload immediately call extractScoutFromImage, auto-populate the scout paste textarea with fullText result (keeping it visible and editable for debugging), auto-fill march size from OCR result or inferred troop totals (keeping field editable), auto-populate tier and TG level dropdowns from inferred values, auto-fill troop counts from extracted counts, and display loading state during OCR processing",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-handle-separate-image-uploads-for-my-troops-and-enemy-troops-independently-route-extraction-results-to-correct-state-mytroops-vs-enemytroops-based-on-which-upload-button-was-clicked-ensure-each-upload-only-affects-its-respective-side-s-data-without-cross-contamination",
+      "title": "Handle separate image uploads for My Troops and Enemy Troops independently: route extraction results to correct state (myTroops vs enemyTroops) based on which upload button was clicked, ensure each upload only affects its respective side's data without cross-contamination",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-optional-debug-section-in-battlecalculatorform-that-displays-ocr-extraction-debug-info-including-romantext-tgtext-iconbox-coordinates-iconx-icony-iconsize-w-h-in-collapsible-details-element-helping-users-tune-icon-position-estimates-for-their-specific-screenshot-layouts",
+      "title": "Add optional debug section in BattleCalculatorForm that displays OCR extraction debug info including romanText, tgText, iconBox coordinates (iconX, iconY, iconSize, W, H) in collapsible details element, helping users tune icon position estimates for their specific screenshot layouts",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-error-handling-for-image-upload-to-catch-ocr-failures-display-user-friendly-error-messages-when-extraction-fails-and-provide-guidance-on-ensuring-clear-scout-report-screenshots",
+      "title": "Update error handling for image upload to catch OCR failures, display user-friendly error messages when extraction fails, and provide guidance on ensuring clear scout report screenshots",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-march-size-field-remains-optional-and-editable-do-not-lock-or-disable-the-input-after-auto-fill-clearly-indicate-in-placeholder-text-that-the-field-is-auto-filled-if-detected-allow-users-to-manually-override-auto-filled-values",
+      "title": "Ensure march size field remains optional and editable: do not lock or disable the input after auto-fill, clearly indicate in placeholder text that the field is 'Auto-filled if detected', allow users to manually override auto-filled values",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "User-friendly and aesthetically pleasing UI for Kingshot Battle Calculator",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Integrate the complete kingshotCore.ts engine module into the backend without modifications to preserve all core functionality including parseScoutPaste, parseStatBonusesOnly, parseNotesTwoColumn, recommendFormation, and all battle calculation logic",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Add mobile-friendly image upload feature for scout reports that extracts troop counts and stat bonuses using multimodal vision AI, working as an alternative to paste functionality for both My Troops and Enemy Troops areas",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Implement multimodal vision AI integration in the backend that accepts uploaded scout report images and extracts: (1) Troop total number (e.g., 131,010), (2) All stat bonuses including Infantry Attack/Defense/Lethality/Health percentages, Cavalry Attack/Defense/Lethality/Health percentages, and Archer Attack/Defense/Lethality/Health percentages, returning the extracted data in structured format matching the scout paste text format",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Validate that all imported dependencies and modules are correctly declared in package.json, including React, Tailwind CSS, shadcn/ui components, and any image processing libraries",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Ensure the backend main.mo actor compiles successfully and includes any required methods for the image upload feature, even if currently stubbed out",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Implement immediate OCR processing on image upload that automatically extracts troop counts, march size, tier (Roman numerals under icon), and TG level (top-right of icon) without requiring any manual text input",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Auto-populate scout text box with OCR results while keeping it optional for paste/debugging, allowing users to manually edit if needed",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Implement smart march size auto-fill that extracts from OCR or infers from troop totals, keeping the field editable (not locked) as a default that users can override",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add tier and TG level detection from troop icon using canvas cropping: OCR bottom strip for Roman numerals (I-XI) and top-right corner for TG digit (1-5), then auto-populate tier/TG dropdowns for My Troops and Enemy Troops",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Integrate tesseract.js OCR library with canvas-based image preprocessing (contrast/bw enhancement) and crop utilities for troop icon region extraction",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Implement extractScoutFromImage utility with initial icon position estimates (8% left, 33% top, 10% size) and pattern matching for march size, troop counts, Roman numerals, and TG digits",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Add tesseract.js as a frontend dependency to enable OCR processing of uploaded scout report images",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Kingshot Battle Calculator",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

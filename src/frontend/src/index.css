@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.625rem;
+        
+        /* Tactical Dark Theme - Base Colors */
+        --tactical-dark: 210 20% 12%;
+        --tactical-dark-secondary: 210 18% 16%;
+        --tactical-olive: 85 30% 45%;
+        --tactical-steel: 205 40% 55%;
+        --tactical-amber: 38 85% 62%;
+        --tactical-success: 142 70% 45%;
+        --tactical-danger: 0 70% 55%;
+        
+        /* OKLCH Color System */
+        --background: 0.145 0.01 210;
+        --foreground: 0.95 0.01 210;
+        --card: 0.18 0.01 210;
+        --card-foreground: 0.95 0.01 210;
+        --popover: 0.20 0.01 210;
+        --popover-foreground: 0.95 0.01 210;
+        --primary: 0.75 0.15 38;
+        --primary-foreground: 0.15 0.01 210;
+        --secondary: 0.25 0.02 210;
+        --secondary-foreground: 0.95 0.01 210;
+        --muted: 0.30 0.02 210;
+        --muted-foreground: 0.65 0.02 210;
+        --accent: 0.65 0.10 85;
+        --accent-foreground: 0.15 0.01 210;
+        --destructive: 0.60 0.20 0;
+        --destructive-foreground: 0.95 0.01 210;
+        --border: 0.30 0.02 210;
+        --input: 0.25 0.02 210;
+        --ring: 0.75 0.15 38;
+        --chart-1: 0.65 0.10 85;
+        --chart-2: 0.70 0.12 205;
+        --chart-3: 0.75 0.15 38;
+        --chart-4: 0.60 0.20 0;
+        --chart-5: 0.65 0.18 142;
+        --sidebar: 0.18 0.01 210;
+        --sidebar-foreground: 0.95 0.01 210;
+        --sidebar-primary: 0.75 0.15 38;
+        --sidebar-primary-foreground: 0.15 0.01 210;
+        --sidebar-accent: 0.25 0.02 210;
+        --sidebar-accent-foreground: 0.95 0.01 210;
+        --sidebar-border: 0.30 0.02 210;
+        --sidebar-ring: 0.75 0.15 38;
+    }
+
+    .dark {
+        --background: 0.145 0.01 210;
+        --foreground: 0.95 0.01 210;
+        --card: 0.18 0.01 210;
+        --card-foreground: 0.95 0.01 210;
+        --popover: 0.20 0.01 210;
+        --popover-foreground: 0.95 0.01 210;
+        --primary: 0.75 0.15 38;
+        --primary-foreground: 0.15 0.01 210;
+        --secondary: 0.25 0.02 210;
+        --secondary-foreground: 0.95 0.01 210;
+        --muted: 0.30 0.02 210;
+        --muted-foreground: 0.65 0.02 210;
+        --accent: 0.65 0.10 85;
+        --accent-foreground: 0.15 0.01 210;
+        --destructive: 0.60 0.20 0;
+        --destructive-foreground: 0.95 0.01 210;
+        --border: 0.30 0.02 210;
+        --input: 0.25 0.02 210;
+        --ring: 0.75 0.15 38;
+        --chart-1: 0.65 0.10 85;
+        --chart-2: 0.70 0.12 205;
+        --chart-3: 0.75 0.15 38;
+        --chart-4: 0.60 0.20 0;
+        --chart-5: 0.65 0.18 142;
+        --sidebar: 0.18 0.01 210;
+        --sidebar-foreground: 0.95 0.01 210;
+        --sidebar-primary: 0.75 0.15 38;
+        --sidebar-primary-foreground: 0.15 0.01 210;
+        --sidebar-accent: 0.25 0.02 210;
+        --sidebar-accent-foreground: 0.95 0.01 210;
+        --sidebar-border: 0.30 0.02 210;
+        --sidebar-ring: 0.75 0.15 38;
+    }
+
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+}
+
+@layer utilities {
+    .tactical-dark {
+        background-color: hsl(var(--tactical-dark));
+    }
+    .tactical-dark-secondary {
+        background-color: hsl(var(--tactical-dark-secondary));
+    }
+    .text-tactical-olive {
+        color: hsl(var(--tactical-olive));
+    }
+    .text-tactical-steel {
+        color: hsl(var(--tactical-steel));
+    }
+    .text-tactical-amber {
+        color: hsl(var(--tactical-amber));
+    }
+    .text-tactical-success {
+        color: hsl(var(--tactical-success));
+    }
+    .text-tactical-danger {
+        color: hsl(var(--tactical-danger));
+    }
+    .bg-tactical-olive {
+        background-color: hsl(var(--tactical-olive));
+    }
+    .bg-tactical-steel {
+        background-color: hsl(var(--tactical-steel));
+    }
+    .bg-tactical-amber {
+        background-color: hsl(var(--tactical-amber));
+    }
+    .bg-tactical-success {
+        background-color: hsl(var(--tactical-success));
+    }
+    .bg-tactical-danger {
+        background-color: hsl(var(--tactical-danger));
+    }
+    .border-tactical-olive {
+        border-color: hsl(var(--tactical-olive));
+    }
+    .border-tactical-steel {
+        border-color: hsl(var(--tactical-steel));
+    }
+    .border-tactical-amber {
+        border-color: hsl(var(--tactical-amber));
+    }
+    .border-tactical-danger {
+        border-color: hsl(var(--tactical-danger));
+    }
+    
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .tabular-nums {
+        font-variant-numeric: tabular-nums;
+    }
+}

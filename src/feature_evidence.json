@@ -1,0 +1,149 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-create-extractscoutfromimage-utility-function-that-performs-full-image-ocr-extracts-march-size-and-troop-counts-using-pattern-matching-crops-troop-icon-regions-performs-ocr-on-bottom-strip-for-roman-numerals-i-xi-to-detect-tier-performs-ocr-on-top-right-corner-for-tg-digit-1-5-and-returns-structured-data-including-fulltext-marchsize-counts-infantry-cavalry-archer-inferred-tier-and-tglevel-and-debug-info",
+      "featureTitle": "Create extractScoutFromImage utility function that performs full-image OCR, extracts march size and troop counts using pattern matching, crops troop icon regions, performs OCR on bottom strip for Roman numerals (I-XI) to detect tier, performs OCR on top-right corner for TG digit (1-5), and returns structured data including fullText, marchSize, counts (infantry/cavalry/archer), inferred tier and tgLevel, and debug info",
+      "files": [
+        "frontend/src/utils/ocrExtraction.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-25"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-canvas-preprocessing-utilities-including-imagefiletocanvas-converts-file-to-htmlcanvaselement-cropcanvas-extracts-sub-region-from-canvas-and-preprocessforocr-applies-grayscale-conversion-and-binary-threshold-at-160-for-improved-ocr-accuracy",
+      "featureTitle": "Create canvas preprocessing utilities including imageFileToCanvas (converts File to HTMLCanvasElement), cropCanvas (extracts sub-region from canvas), and preprocessForOcr (applies grayscale conversion and binary threshold at 160 for improved OCR accuracy)",
+      "files": [
+        "frontend/src/utils/canvasUtils.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-26"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-text-parsing-utilities-including-normalizeocrtext-removes-special-characters-and-normalizes-whitespace-parsenumberloose-strips-non-digits-and-parses-numbers-with-commas-spaces-romantotier-converts-roman-numerals-i-xi-to-tier-1-11-extractmarchsizefromtext-uses-regex-patterns-for-march-size-extraction-and-extracttroopcountsfromtext-uses-regex-patterns-for-infantry-cavalry-archer-extraction",
+      "featureTitle": "Create text parsing utilities including normalizeOcrText (removes special characters and normalizes whitespace), parseNumberLoose (strips non-digits and parses numbers with commas/spaces), romanToTier (converts Roman numerals I-XI to tier 1-11), extractMarchSizeFromText (uses regex patterns for march size extraction), and extractTroopCountsFromText (uses regex patterns for infantry/cavalry/archer extraction)",
+      "files": [
+        "frontend/src/utils/textParsing.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-27"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-battlecalculatorform-to-integrate-ocr-extraction-on-image-upload-immediately-call-extractscoutfromimage-auto-populate-the-scout-paste-textarea-with-fulltext-result-keeping-it-visible-and-editable-for-debugging-auto-fill-march-size-from-ocr-result-or-inferred-troop-totals-keeping-field-editable-auto-populate-tier-and-tg-level-dropdowns-from-inferred-values-auto-fill-troop-counts-from-extracted-counts-and-display-loading-state-during-ocr-processing",
+      "featureTitle": "Update BattleCalculatorForm to integrate OCR extraction: on image upload immediately call extractScoutFromImage, auto-populate the scout paste textarea with fullText result (keeping it visible and editable for debugging), auto-fill march size from OCR result or inferred troop totals (keeping field editable), auto-populate tier and TG level dropdowns from inferred values, auto-fill troop counts from extracted counts, and display loading state during OCR processing",
+      "files": [
+        "frontend/src/components/BattleCalculatorForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-28"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-handle-separate-image-uploads-for-my-troops-and-enemy-troops-independently-route-extraction-results-to-correct-state-mytroops-vs-enemytroops-based-on-which-upload-button-was-clicked-ensure-each-upload-only-affects-its-respective-side-s-data-without-cross-contamination",
+      "featureTitle": "Handle separate image uploads for My Troops and Enemy Troops independently: route extraction results to correct state (myTroops vs enemyTroops) based on which upload button was clicked, ensure each upload only affects its respective side's data without cross-contamination",
+      "files": [
+        "frontend/src/components/BattleCalculatorForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-29"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-optional-debug-section-in-battlecalculatorform-that-displays-ocr-extraction-debug-info-including-romantext-tgtext-iconbox-coordinates-iconx-icony-iconsize-w-h-in-collapsible-details-element-helping-users-tune-icon-position-estimates-for-their-specific-screenshot-layouts",
+      "featureTitle": "Add optional debug section in BattleCalculatorForm that displays OCR extraction debug info including romanText, tgText, iconBox coordinates (iconX, iconY, iconSize, W, H) in collapsible details element, helping users tune icon position estimates for their specific screenshot layouts",
+      "files": [
+        "frontend/src/components/BattleCalculatorForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-30"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-error-handling-for-image-upload-to-catch-ocr-failures-display-user-friendly-error-messages-when-extraction-fails-and-provide-guidance-on-ensuring-clear-scout-report-screenshots",
+      "featureTitle": "Update error handling for image upload to catch OCR failures, display user-friendly error messages when extraction fails, and provide guidance on ensuring clear scout report screenshots",
+      "files": [
+        "frontend/src/components/BattleCalculatorForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-31"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-march-size-field-remains-optional-and-editable-do-not-lock-or-disable-the-input-after-auto-fill-clearly-indicate-in-placeholder-text-that-the-field-is-auto-filled-if-detected-allow-users-to-manually-override-auto-filled-values",
+      "featureTitle": "Ensure march size field remains optional and editable: do not lock or disable the input after auto-fill, clearly indicate in placeholder text that the field is 'Auto-filled if detected', allow users to manually override auto-filled values",
+      "files": [
+        "frontend/src/components/BattleCalculatorForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-32"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

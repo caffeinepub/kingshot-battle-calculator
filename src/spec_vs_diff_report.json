@@ -1,0 +1,35 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-23T03:45:49.725Z",
+  "summary": "The diff implements OCR-based image upload infrastructure with canvas utilities, text parsing helpers, and form integration. However, the core OCR library (tesseract.js) is intentionally not installed, leaving all OCR functionality as a placeholder that throws user-friendly errors. The implementation provides the structural foundation but does not deliver functional OCR extraction capabilities.",
+  "missing_requirements": [
+    {
+      "id": "REQ-24",
+      "requirement": "Add tesseract.js as a frontend dependency to enable OCR processing of uploaded scout report images",
+      "reason": "tesseract.js is not added to frontend/package.json. The ocrExtraction.ts file contains a comment stating it's a placeholder and requires tesseract.js to be manually installed.",
+      "evidence": [
+        "frontend/src/utils/ocrExtraction.ts"
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "requirement": "Create extractScoutFromImage utility function that performs full-image OCR and extracts structured data",
+      "reason": "extractScoutFromImage is defined but only throws a placeholder error message instead of performing OCR processing. No tesseract.js integration exists.",
+      "evidence": [
+        "frontend/src/utils/ocrExtraction.ts"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.95,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/BattleCalculatorForm.tsx",
+    "frontend/src/constants/helpText.ts",
+    "frontend/src/utils/canvasUtils.ts",
+    "frontend/src/utils/ocrExtraction.ts",
+    "frontend/src/utils/textParsing.ts",
+    "project_state.json"
+  ]
+}
